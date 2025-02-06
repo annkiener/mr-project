@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Orchestrator : MonoBehaviour
@@ -8,8 +9,12 @@ public class Orchestrator : MonoBehaviour
     public GameObject spherePrefab; // Assign the pulsating sphere prefab in Inspector
     public Transform spawnPoint; // Location where spheres will appear
     public float spawnRadius = 10f;
-    public int sphereCount = 7; // How many spheres to spawn
-    public float spawnInterval = 5f; // Time between spawns
+    public int sphereCount = 10; // How many spheres to spawn
+    public float spawnInterval = 2f; // Time between spawns
+
+    private List<GameObject> spawnedSpheres = new List<GameObject>();
+
+    public float disappearInterval = 2f; // Time between disappearances
     public DotManager dotManager; // Reference to the DotManager script
 
     void Start()
@@ -21,13 +26,15 @@ public class Orchestrator : MonoBehaviour
     IEnumerator OrchestrationSequence()
     {
         Debug.Log("Simulation started");
-
+        
         // will be 60s but temporarily it is set to 10s for testing
-        yield return new WaitForSeconds(10f);
-        PlayWhispers();
+        yield return new WaitForSeconds(5f);
+        DotsAppear();
+        // PlayWhispers();
         // visual field is getting darker
 
         yield return new WaitForSeconds(5f);
+        
         soundManager.PlaySound("1");
 
         yield return new WaitForSeconds(10f);
@@ -37,14 +44,19 @@ public class Orchestrator : MonoBehaviour
         soundManager.PlaySound("3");
 
         yield return new WaitForSeconds(10f);
-        soundManager.PlaySound("4");
-
+        soundManager.PlaySound("4"); 
+        
         yield return new WaitForSeconds(20f);
         for (int i = 0; i < sphereCount; i++)
             {
                 yield return new WaitForSeconds(spawnInterval);
                 SpawnSphere();      
             }
+
+        yield return new WaitForSeconds(5f);
+        soundManager.PlaySound("5");
+
+        yield return new WaitForSeconds(5f);
         soundManager.PlaySound("5");
 
         yield return new WaitForSeconds(10f);
@@ -54,10 +66,22 @@ public class Orchestrator : MonoBehaviour
         soundManager.PlaySound("7");
 
         yield return new WaitForSeconds(5f);
-        // dark spots slowly fade away   
+        while (spawnedSpheres.Count > 0)
+        {
+            yield return new WaitForSeconds(disappearInterval);
 
-        yield return new WaitForSeconds(10f);
-        // DotsAppear();
+            // Get the first spawned sphere
+            GameObject sphereToRemove = spawnedSpheres[0];
+            spawnedSpheres.RemoveAt(0);
+
+            if (sphereToRemove != null)
+            {
+                Destroy(sphereToRemove);
+            }
+        } 
+
+        yield return new WaitForSeconds(20f);
+        //DotsAppear();
         soundManager.PlaySound("8");
 
         yield return new WaitForSeconds(10f);
@@ -67,7 +91,7 @@ public class Orchestrator : MonoBehaviour
         soundManager.PlaySound("10");
 
         yield return new WaitForSeconds(20f);
-        // dots disappear
+        DotsDisappear();
         soundManager.PlaySound("11");
 
 
@@ -105,6 +129,9 @@ public class Orchestrator : MonoBehaviour
         // Instantiate a new sphere at the random position
         GameObject newSphere = Instantiate(spherePrefab, spawnPosition, Quaternion.identity);
 
+        // Store reference to the sphere
+        spawnedSpheres.Add(newSphere);
+
         Debug.Log($"Spawned a sphere at {spawnPosition}");
 
     }
@@ -121,5 +148,10 @@ public class Orchestrator : MonoBehaviour
         {
             Debug.LogError("DotManager is not assigned in the Orchestrator!");
         }
+    }
+
+    void DotsDisappear()
+    {
+        dotManager.RemoveDots();
     }
 }

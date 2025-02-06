@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DotManager : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class DotManager : MonoBehaviour
     public float areaSize = 5.0f; // Size of the spawning area
     public Color redColor = Color.red;
     public Color blueColor = Color.blue;
+
+    public List<GameObject> spawnedDots = new List<GameObject>(); // List to store spawned dots
+
 
     void Start()
     {
@@ -26,7 +30,9 @@ public class DotManager : MonoBehaviour
 
             // Instantiate the dot prefab at the random position
             GameObject dot = Instantiate(dotPrefab, randomPosition, Quaternion.identity);
-            dot.AddComponent<DotInteraction>(); // Add DotInteraction script to the dot
+
+            // Store the dot reference in the list
+            spawnedDots.Add(dot);
 
             // Randomly assign red or blue color
             Renderer dotRenderer = dot.GetComponent<Renderer>();
@@ -35,12 +41,19 @@ public class DotManager : MonoBehaviour
         }
     }
 
-        public void ResetDots()
+        public void RemoveDots()
     {
-        DotConnector.Instance.ResetConnections();
-        foreach (DotInteraction dot in FindObjectsOfType<DotInteraction>())
+                // Loop through the list and destroy all spawned dots
+        foreach (GameObject dot in spawnedDots)
         {
-            dot.ResetDot();
+            if (dot != null)
+            {
+                Destroy(dot);
+            }
         }
+
+        // Clear the list after removing dots
+        spawnedDots.Clear();
     }
+
 }

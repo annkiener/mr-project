@@ -2,29 +2,22 @@ using UnityEngine;
 
 public class DotInteraction : MonoBehaviour
 {
-    private Renderer dotRenderer;
-    private Color originalColor;
-    private bool isTouched = false;
+    public Color touchColor = Color.green; // Change color on touch
 
-    void Start()
+    private void OnTriggerEnter(Collider other)
     {
-        dotRenderer = GetComponent<Renderer>();
-        originalColor = dotRenderer.material.color;
-    }
-
-    void OnMouseDown() // Works for PC (Mouse) & Mobile (Touch)
-    {
-        if (!isTouched) // Prevent multiple touches
+        if (other.CompareTag("Hand")) // Detects the hand colliders
         {
-            isTouched = true;
-            dotRenderer.material.color = Color.yellow; // Light up
-            DotConnector.Instance.RegisterDot(this.transform);
+            ChangeColor();
         }
     }
 
-    public void ResetDot()
+    void ChangeColor()
     {
-        isTouched = false;
-        dotRenderer.material.color = originalColor; // Reset to original color
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = touchColor;
+        }
     }
 }
