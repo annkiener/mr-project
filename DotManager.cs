@@ -5,9 +5,10 @@ public class DotManager : MonoBehaviour
 {
     public GameObject dotPrefab; // Assign the DotPrefab in the Inspector
     public int numberOfDots = 100; // Total number of dots to spawn
-    public float areaSize = 5.0f; // Size of the spawning area
+    public float areaSize = 1.0f; // Size of the spawning area
     public Color redColor = Color.red;
     public Color blueColor = Color.blue;
+    
 
     public List<GameObject> spawnedDots = new List<GameObject>(); // List to store spawned dots
 
@@ -43,7 +44,7 @@ public class DotManager : MonoBehaviour
 
         public void RemoveDots()
     {
-                // Loop through the list and destroy all spawned dots
+        // Loop through the list and destroy all spawned dots
         foreach (GameObject dot in spawnedDots)
         {
             if (dot != null)
