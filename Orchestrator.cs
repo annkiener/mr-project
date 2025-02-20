@@ -17,6 +17,8 @@ public class Orchestrator : MonoBehaviour
     public float disappearInterval = 2f; // Time between disappearances
     public DotManager dotManager; // Reference to the DotManager script
 
+    public WordSpawner wordSpawner; // Reference to the WordManager script
+
     void Start()
     {
         StartCoroutine(OrchestrationSequence());
@@ -28,9 +30,10 @@ public class Orchestrator : MonoBehaviour
         Debug.Log("Simulation started");
         
         // will be 60s but temporarily it is set to 10s for testing
-        yield return new WaitForSeconds(5f);
-        DotsAppear();
-        // PlayWhispers();
+        yield return new WaitForSeconds(10f);
+        PlayWhispers();
+        WordsAppear();
+        //DotsAppear();
         // visual field is getting darker
 
         yield return new WaitForSeconds(5f);
@@ -81,7 +84,7 @@ public class Orchestrator : MonoBehaviour
         } 
 
         yield return new WaitForSeconds(20f);
-        //DotsAppear();
+        // DotsAppear();
         soundManager.PlaySound("8");
 
         yield return new WaitForSeconds(10f);
@@ -153,5 +156,22 @@ public class Orchestrator : MonoBehaviour
     void DotsDisappear()
     {
         dotManager.RemoveDots();
+    }
+
+    void WordsAppear()
+    {
+        if(wordSpawner != null)
+        {
+            wordSpawner.InstantiateWords();
+        }
+        else
+        {
+            Debug.LogError("WordSpawner is not assigned in the Orchestrator!");
+        }
+    }
+
+    void WordsDisappear()
+    {
+        wordSpawner.RemoveWords();
     }
 }
