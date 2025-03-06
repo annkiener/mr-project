@@ -32,8 +32,8 @@ public class Orchestrator : MonoBehaviour
         // will be 60s but temporarily it is set to 10s for testing
         yield return new WaitForSeconds(10f);
         PlayWhispers();
-        WordsAppear();
-        //DotsAppear();
+        // WordsAppear();
+        // DotsAppear();
         // visual field is getting darker
 
         yield return new WaitForSeconds(5f);
@@ -84,7 +84,7 @@ public class Orchestrator : MonoBehaviour
         } 
 
         yield return new WaitForSeconds(20f);
-        // DotsAppear();
+        DotsAppear();
         soundManager.PlaySound("8");
 
         yield return new WaitForSeconds(10f);

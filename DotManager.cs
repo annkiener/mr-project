@@ -37,7 +37,7 @@ public class DotManager : MonoBehaviour
                 // Generate a random position within a specified range
                 randomOffset = new Vector3(
                 Random.Range(-spawnWidth, spawnWidth), // Left/Right range
-                Random.Range(1.0f, spawnHeight), // Height range (1m to 1.5m)
+                Random.Range(1.4f, spawnHeight), // Height range (1m to 1.5m)
                 Random.Range(0.5f, spawnDepth) // Depth in front of player
             );
 
