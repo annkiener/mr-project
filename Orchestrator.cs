@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class Orchestrator : MonoBehaviour
 {
-    public AudioSource whispers; // Reference to the background whispers
-    public SoundManager soundManager; // Reference to the SoundManager script
-    public GameObject spherePrefab; // Assign the pulsating sphere prefab in Inspector
-    public Transform spawnPoint; // Location where spheres will appear
+    public AudioSource whispers; 
+    public SoundManager soundManager; 
+    public GameObject spherePrefab; 
+    public Transform spawnPoint; 
     public float spawnRadius = 10f;
-    public int sphereCount = 10; // How many spheres to spawn
-    public float spawnInterval = 2f; // Time between spawns
+    public int sphereCount = 10; 
+    public float spawnInterval = 2f; 
 
     private List<GameObject> spawnedSpheres = new List<GameObject>();
 
-    public float disappearInterval = 2f; // Time between disappearances
-    public DotManager dotManager; // Reference to the DotManager script
-
-    public WordSpawner wordSpawner; // Reference to the WordManager script
+    public float disappearInterval = 2f; 
+    public DotManager dotManager; 
 
     void Start()
     {
@@ -32,15 +30,14 @@ public class Orchestrator : MonoBehaviour
         // will be 60s but temporarily it is set to 10s for testing
         yield return new WaitForSeconds(10f);
         PlayWhispers();
-        // WordsAppear();
-        // DotsAppear();
+        
         // visual field is getting darker
-
+        
         yield return new WaitForSeconds(5f);
         
         soundManager.PlaySound("1");
 
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(15f);
         soundManager.PlaySound("2");
 
         yield return new WaitForSeconds(10f);
@@ -73,7 +70,7 @@ public class Orchestrator : MonoBehaviour
         {
             yield return new WaitForSeconds(disappearInterval);
 
-            // Get the first spawned sphere
+            //  first spawned sphere
             GameObject sphereToRemove = spawnedSpheres[0];
             spawnedSpheres.RemoveAt(0);
 
@@ -90,12 +87,15 @@ public class Orchestrator : MonoBehaviour
         yield return new WaitForSeconds(10f);
         soundManager.PlaySound("9");    
 
-        yield return new WaitForSeconds(10f);
-        soundManager.PlaySound("10");
+        //yield return new WaitForSeconds(10f);
+        //soundManager.PlaySound("10");
 
         yield return new WaitForSeconds(20f);
-        DotsDisappear();
         soundManager.PlaySound("11");
+
+        yield return new WaitForSeconds(10f);
+        DotsDisappear();
+        soundManager.PlaySound("12");
 
 
         yield return new WaitForSeconds(120f);
@@ -124,12 +124,9 @@ public class Orchestrator : MonoBehaviour
             return;
         }
 
-         // Generate a random position within a circular area
         Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
-        randomOffset.y = 0; // Keep spheres on the same Y level
+        randomOffset.y = 0; // same Y level
         Vector3 spawnPosition = spawnPoint.position + randomOffset;
-
-        // Instantiate a new sphere at the random position
         GameObject newSphere = Instantiate(spherePrefab, spawnPosition, Quaternion.identity);
 
         // Store reference to the sphere
@@ -158,20 +155,4 @@ public class Orchestrator : MonoBehaviour
         dotManager.RemoveDots();
     }
 
-    void WordsAppear()
-    {
-        if(wordSpawner != null)
-        {
-            wordSpawner.InstantiateWords();
-        }
-        else
-        {
-            Debug.LogError("WordSpawner is not assigned in the Orchestrator!");
-        }
-    }
-
-    void WordsDisappear()
-    {
-        wordSpawner.RemoveWords();
-    }
 }

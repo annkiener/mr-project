@@ -11,7 +11,7 @@ public class WordSpawner : MonoBehaviour
     public float areaDepth = 5.0f; // Full depth range
     public float minDistance = 0.3f; // Minimum distance between words to avoid overlapping
 
-    public string[] words = { "Useless", "Dumb", "Attention!", "Careful", "Watch" }; // Custom words
+    public string[] words = { "Useless", "Dumb", "Attention!", "Careful", "Watch" };
 
     private List<GameObject> spawnedWords = new List<GameObject>();
 

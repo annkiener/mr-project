@@ -118,5 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f6cec99050814fb59c0ef3608dcb656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveAmplitude: 0.2
-  waveFrequency: 0.25
+  waveAmplitude: 0.4
+  waveFrequency: 0.5

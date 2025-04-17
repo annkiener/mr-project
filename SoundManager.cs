@@ -8,7 +8,7 @@ public class SoundManager : MonoBehaviour
     public class AudioSourceConfig
     {
         public AudioSource audioSource;
-        public string voiceGroup; // Unique identifier for each voice
+        public string voiceGroup; // identifier
     }
 
     public List<AudioSourceConfig> audioSourceConfigs;
@@ -16,7 +16,6 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        // Create a dictionary for quick access to sounds
         audioSourcesDict = new Dictionary<string, AudioSourceConfig>();
         foreach (var config in audioSourceConfigs)
         {
@@ -27,7 +26,6 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    // Play a sound once by voiceGroup name
     public void PlaySound(string voiceGroup)
     {
         if (audioSourcesDict.TryGetValue(voiceGroup, out AudioSourceConfig config))

@@ -1,37 +1,114 @@
 using UnityEngine;
+using System.Collections;
 
 public class ObjectCollision : MonoBehaviour
 {
-    public Material newMaterial;
     private MeshRenderer meshRenderer;
     private Material originalMaterial;
 
+    // Global shared audio stuff
+    private static AudioSource sharedAudioSource;
+    private static AudioClip targetClip;
+    private static Coroutine repeatCoroutine;
+    private static bool hasStopped = false;
+
+    private static MonoBehaviour coroutineHost; // run the coroutine from one instance
+
     void Start()
     {
-        // Get the MeshRenderer component
         meshRenderer = GetComponent<MeshRenderer>();
         if (meshRenderer != null)
         {
             originalMaterial = meshRenderer.material;
         }
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Hand") || collision.gameObject.CompareTag("LeftHand"))
+        // Set up shared audio only once
+        if (!hasStopped && sharedAudioSource == null)
         {
-            // Change material
-            if (meshRenderer != null && newMaterial != null)
+            GameObject audioObject = GameObject.FindGameObjectWithTag("Audio10");
+            if (audioObject != null)
             {
-                meshRenderer.material = newMaterial;
+                sharedAudioSource = audioObject.GetComponent<AudioSource>();
+                if (sharedAudioSource != null)
+                {
+                    targetClip = sharedAudioSource.clip;
+
+                    // Start the coroutine from the first instance
+                    coroutineHost = this;
+                    repeatCoroutine = coroutineHost.StartCoroutine(RepeatAudio());
+                }
+                else
+                {
+                    Debug.LogWarning("Audio10 object does not have an AudioSource!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("No object with tag 'Audio10' found.");
             }
         }
     }
 
+    static IEnumerator RepeatAudio()
+    {
+        yield return new WaitForSeconds(15f); // Initial delay before starting the loop because of the orchestrator
+        while (!hasStopped)
+        {
+            sharedAudioSource.Play();
+
+            float timer = 0f;
+            while (timer < targetClip.length && !hasStopped)
+            {
+                timer += Time.deltaTime;
+                yield return null;
+            }
+
+            float pause = 0f;
+            while (pause < 3f && !hasStopped)
+            {
+                pause += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        Debug.Log("Audio loop stopped.");
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("HandIndex1"))
+        {
+            Debug.Log("Collision detected by " + gameObject.name);
+
+            // Change color 
+            if (meshRenderer != null)
+            {
+                Color randomColor = new Color(Random.value, Random.value, Random.value);
+                meshRenderer.material.color = randomColor;
+            }
+
+            // Stop the shared audio 
+            if (!hasStopped)
+            {
+                hasStopped = true;
+
+                if (repeatCoroutine != null && coroutineHost != null)
+                {
+                    coroutineHost.StopCoroutine(repeatCoroutine);
+                }
+
+                if (sharedAudioSource != null && sharedAudioSource.isPlaying)
+                {
+                    sharedAudioSource.Stop();
+                }
+
+                Debug.Log("Audio loop stopped due to collision with: " + gameObject.name);
+            }
+        }
+    }
     void OnCollisionExit(Collision collision)
     {
-        // Restore the original material when the hand stops touching
-        if (collision.gameObject.CompareTag("Hand") || collision.gameObject.CompareTag("LeftHand"))
+        if (collision.gameObject.CompareTag("Hand"))
         {
             if (meshRenderer != null)
             {
