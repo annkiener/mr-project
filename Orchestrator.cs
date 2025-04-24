@@ -28,7 +28,7 @@ public class Orchestrator : MonoBehaviour
         Debug.Log("Simulation started");
         
         // will be 60s but temporarily it is set to 10s for testing
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(60f);
         PlayWhispers();
         
         // visual field is getting darker

@@ -21,7 +21,7 @@ public class ScreenDarkener : MonoBehaviour
 
     IEnumerator FadeToDark()
     {
-        yield return new WaitForSeconds(10f); 
+        yield return new WaitForSeconds(60f); 
 
         float elapsedTime = 0f;
         Color panelColor = darkPanel.color;

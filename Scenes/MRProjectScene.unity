@@ -15164,7 +15164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   darkPanel: {fileID: 1087596010}
-  fadeDuration: 5
+  fadeDuration: 7
 --- !u!4 &806400578
 Transform:
   m_ObjectHideFlags: 0
