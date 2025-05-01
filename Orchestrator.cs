@@ -20,21 +20,16 @@ public class Orchestrator : MonoBehaviour
     void Start()
     {
         StartCoroutine(OrchestrationSequence());
-        
     }
 
     IEnumerator OrchestrationSequence()
     {
         Debug.Log("Simulation started");
-        
-        // will be 60s but temporarily it is set to 10s for testing
         yield return new WaitForSeconds(60f);
         PlayWhispers();
-        
         // visual field is getting darker
         
         yield return new WaitForSeconds(5f);
-        
         soundManager.PlaySound("1");
 
         yield return new WaitForSeconds(15f);
